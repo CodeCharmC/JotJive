@@ -7,10 +7,12 @@ import Search from './pages/Search';
 import Projects from './pages/Projects';
 import Dashboard from './pages/Dashboard';
 import CreatePost from './pages/CreatePost';
+import Header from './components/Header';
 
 export default function App() {
   return (
     <BrowserRouter>
+      <Header />
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
