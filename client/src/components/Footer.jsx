@@ -30,14 +30,12 @@ export default function FooterPart() {
                         >
                            ŚuŚāgatom
                         </Footer.Link>
-                        <Footer.Link>
-                           <Footer.Link
-                              href="/about"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                           >
+                        <Footer.Link
+                           href="/about"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                        >
                            JotJive Blog
-                           </Footer.Link>
                         </Footer.Link>
                      </Footer.LinkGroup>
                   </div>
