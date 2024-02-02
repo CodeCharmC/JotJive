@@ -53,7 +53,7 @@ export default function SignIn() {
                   className="font-bold dark:text-white text-4xl"
                >
                   <span
-                     className="px-2 py-1 bg-gradient-to-r from-indigo-900 via-purple-900 to-pink-500 rounded-lg text-white"
+                     className="px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white"
                   >
                      JotJive
                   </span>
@@ -90,7 +90,7 @@ export default function SignIn() {
                   </div>
                   <Button
                      type="submit"                       
-                     className="bg-gradient-to-r from-indigo-900 via-purple-900 to-pink-500"
+                     className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
                      disabled={loading}
                   >
                      {loading ? (

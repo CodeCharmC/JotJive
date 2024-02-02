@@ -13,7 +13,7 @@ export default function FooterPart() {
                      className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'
                   >
                      <span
-                        className='px-2 py-1 bg-gradient-to-r from-indigo-900 via-purple-900 to-pink-500 rounded-lg text-white'
+                        className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'
                      >
                         JotJive
                      </span>
