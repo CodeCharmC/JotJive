@@ -14,7 +14,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import { updateStart, updateSuccess, updateFailure } from "../redux/user/userSlice";
 
 export default function DashProfile() {
-  const currentUser = useSelector(state => state.user.currentUser);
+  const {currentUser} = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const filePickerRef = useRef();
@@ -22,6 +22,9 @@ export default function DashProfile() {
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
   const [formData, setFormData] = useState({})
   const dispatch = useDispatch();
+  const [imageFileUploading, setImageFileUploading] = useState(false);
+  const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
+  const [updateUserError, setUpdateUserError] = useState(null);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -37,6 +40,7 @@ export default function DashProfile() {
   }, [imageFile]);
   
   const uploadImage = async () => {
+    setImageFileUploading(true);
     setImageFileUploadError(null);
     const storage = getStorage(app);
     const fileName = new Date().getTime() + imageFile.name;
@@ -55,21 +59,31 @@ export default function DashProfile() {
         setImageFileUploadProgress(null);
         setImageFileUrl(null);
         setImageFile(null);
+        setImageFileUploading(false);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageFileUrl(downloadURL);
-          setFormData({ ...formData, image: downloadURL });
+          setFormData({ ...formData, profilePicture: downloadURL });
+          setImageFileUploading(false);
         });
       }
     );
   };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+    setFormData({ ...formData, [e.target.id]: e.target.value});
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(Object.keys(formData).length === 0) {
+    setUpdateUserError(null);
+    setUpdateUserSuccess(null);
+    if (Object.keys(formData).length === 0) {
+      setUpdateUserError("No changes made");
+      return;
+    }   
+    if (imageFileUploading) {  
+      setUpdateUserError("Please wait while image is uploading");
       return;
     }
     try {
@@ -84,15 +98,18 @@ export default function DashProfile() {
       const data = await res.json();
       if (!res.ok) {
         dispatch(updateFailure(data.message));
+        setUpdateUserError(data.message);
       } else {
         dispatch(updateSuccess(data));
+        setUpdateUserSuccess("Profile updated successfully");
       }
     } catch (error) {
       dispatch(updateFailure(error.message));
+      setUpdateUserError(error.message);
     }
   }
-
-  return (
+  
+    return (
     <div className="max-w-lg mx-auto p-3 w-full">
       <h1 className="my-7 text-center font-semibold text-3xl">
         Profile
@@ -188,7 +205,23 @@ export default function DashProfile() {
       <div className="text-red-500 flex justify-between mt-5">
         <span className="cursor-pointer">Delete Account</span>
         <span className="cursor-pointer">Sign Out</span>
-      </div>
+        </div>
+        {updateUserSuccess && (
+          <Alert
+            color="success"
+            className="mt-5"
+          >
+            {updateUserSuccess}
+          </Alert>
+        )}
+        {updateUserError && (
+          <Alert
+            color="failure"
+            className="mt-5"
+          >
+            {updateUserError}
+          </Alert>
+        )}
     </div>
   );
 };

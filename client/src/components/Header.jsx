@@ -7,9 +7,9 @@ import { toggleTheme } from '../redux/theme/themeSlice';
 
 
 export default function Header() {
-   const {theme} = useSelector((state) => state.theme);
+   const { theme } = useSelector((state) => state.theme);   
    const dispatch = useDispatch();
-   const currentUser = useSelector((state) => state.user.currentUser);
+   const { currentUser } = useSelector((state) => state.user);   
    const path = useLocation().pathname;
    const location = useLocation();
 
@@ -48,39 +48,39 @@ export default function Header() {
                onClick={() => dispatch(toggleTheme())}
             >
                {theme === 'light' ? <FaMoon /> : <FaSun />}          
-            </Button>
-            <Link
-               to='/sign-in'
-            >
-               {currentUser ? (
-                  <Dropdown
-                     arrowIcon={false}
-                     inline
-                     label={
-                        <Avatar
-                           alt='User'
-                           img={currentUser?.profilePicture}
-                           rounded
-                        />
-                     }
+            </Button>            
+            {currentUser ? (
+               <Dropdown
+                  arrowIcon={false}
+                  inline
+                  label={
+                     <Avatar
+                        alt='user'
+                        img={currentUser?.profilePicture}
+                        rounded
+                     />
+                  }
+               >
+                  <Dropdown.Header>
+                     <span className='block text-sm'>@{currentUser.username}</span>
+                     <span className='block text-sm font-medium truncate'>{currentUser.email}
+                     </span>
+                  </Dropdown.Header>
+                  <Link to='/dashboard?tab=profile'>
+                     <Dropdown.Item>Profile</Dropdown.Item>
+                  </Link>
+                  <Dropdown.Divider />
+                  <Dropdown.Item>Sign out</Dropdown.Item>
+               </Dropdown>
+            ):(
+                  <Link
+                     to='/sign-in'
                   >
-                     <Dropdown.Header>
-                        <span className='block text-sm'>@{currentUser.username}</span>
-                        <span className='block text-sm font-medium truncate'>{currentUser.email}</span>
-                     </Dropdown.Header>
-                     <Link to='/dashboard?tab=profile'>
-                        <Dropdown.Item>Profile</Dropdown.Item>
-                     </Link>
-                     <Dropdown.Divider />
-                     <Dropdown.Item>Sign out</Dropdown.Item>
-                  </Dropdown>
-               ):(
-                  <Button gradientDuoTone='purpleToBlue' outline>
-                     Sign In
-                  </Button>)
-               }
-                      
-            </Link>
+                     <Button gradientDuoTone='purpleToBlue' outline>
+                        Sign In
+                     </Button>
+                  </Link>
+               )}
             <Navbar.Toggle />            
          </div>
          <Navbar.Collapse>
