@@ -6,13 +6,16 @@ import {app} from '../firebase';
 import { useState } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function CreatePost() {
    const [file, setFile] = useState(null);
    const [imageUploadProgress, setImageUploadProgress] = useState(null);
    const [imageUploadError, setImageUploadError] = useState(null);
-   const [formData, setFormData] = useState({ })
+   const [formData, setFormData] = useState({});
+   const [publisherror, setPublisherror] = useState(null);
+   const navigate = useNavigate();
 
 
    const handleUpdloadImage = async () => {
@@ -48,26 +51,58 @@ export default function CreatePost() {
          setImageUploadError(error.message);
       }   
    }
-
+   const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+         const res = await fetch('/api/post/create', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+         })
+         const data = await res.json();
+         if (!res.ok) {
+            setPublisherror(data.message);
+            return
+         }
+         if (res.ok) {
+            setPublisherror(null);
+            navigate(`/post/${slug}`);
+         }
+         console.log(data);
+      } catch (error) {
+         setPublisherror("Something went wrong");
+      }      
+   }
    return (
       <div className='p-3 max-w-3xl mx-auto min-h-screen'>
          <h1 className='text-center text-3xl my-7 font-semibold'>Create a post</h1>
-         <form className='flex flex-col gap-4' >
+         <form
+            onSubmit={handleSubmit}
+            className='flex flex-col gap-4'
+         >
             <div className='flex flex-col gap-4 sm:flex-row justify-between'>
                <TextInput
                   type='text'
                   placeholder='Title'
                   required
                   id='title'
-                  className='flex-1'               
+                  className='flex-1'  
+                  onChange={(e) => setFormData({
+                     ...formData, title: e.target.value
+                  })}
                />
                <Select
+                  onChange={(e) => setFormData({
+                     ...formData, category: e.target.value
+                  })}
                >
                   <option value='uncategorized'>Select a category</option>
-                  <option value='javascript'>Beauty</option>
-                  <option value='reactjs'>Education</option>
-                  <option value='nextjs'>Entertainment</option>
-                  <option value='nextjs'>Technology</option>
+                  <option value='beauty'>Beauty</option>
+                  <option value='education'>Education</option>
+                  <option value='entertainment'>Entertainment</option>
+                  <option value='technology'>Technology</option>                  
                </Select>
             </div>
             <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
@@ -114,10 +149,24 @@ export default function CreatePost() {
                placeholder='Write something...'
                className='h-72 mb-12'
                required
+               onChange={(value) => setFormData({
+                  ...formData, content: value
+               })}
             />                      
-            <Button type='submit' gradientDuoTone='purpleToPink'>
+            <Button 
+               type='submit' 
+               gradientDuoTone='purpleToPink'
+            >
                Publish
             </Button>
+            {publisherror && (
+               <Alert
+                  color='failure'
+                  className='mt-5'
+               >
+                  {publisherror}
+               </Alert>
+            )}
          </form>
       </div>
    );
