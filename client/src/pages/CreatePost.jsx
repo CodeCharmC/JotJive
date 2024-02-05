@@ -14,7 +14,7 @@ export default function CreatePost() {
    const [imageUploadProgress, setImageUploadProgress] = useState(null);
    const [imageUploadError, setImageUploadError] = useState(null);
    const [formData, setFormData] = useState({});
-   const [publisherror, setPublisherror] = useState(null);
+   const [publishError, setPublishError] = useState(null);
    const navigate = useNavigate();
 
 
@@ -63,16 +63,15 @@ export default function CreatePost() {
          })
          const data = await res.json();
          if (!res.ok) {
-            setPublisherror(data.message);
+            setPublishError(data.message);
             return
          }
          if (res.ok) {
-            setPublisherror(null);
-            navigate(`/post/${slug}`);
+            setPublishError(null);
+            navigate(`/post/${data.slug}`);
          }
-         console.log(data);
       } catch (error) {
-         setPublisherror("Something went wrong");
+         setPublishError("Something went wrong");
       }      
    }
    return (
@@ -159,12 +158,12 @@ export default function CreatePost() {
             >
                Publish
             </Button>
-            {publisherror && (
+            {publishError && (
                <Alert
                   color='failure'
                   className='mt-5'
                >
-                  {publisherror}
+                  {publishError}
                </Alert>
             )}
          </form>
