@@ -26,3 +26,9 @@ export const create = async (req, res, next) => {
       next(error);
    }
 };
+export const getPosts = async (req, res, next) => {
+   try {
+   } catch (error) {
+      next(error);
+   }
+}
