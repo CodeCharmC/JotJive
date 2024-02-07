@@ -18,6 +18,7 @@ export default function UpdatePost() {
    const [publishError, setPublishError] = useState(null);
    const navigate = useNavigate();
    const { postId } = useParams();
+   const {currentUser} = useSelector((state) => state.user);
    
    useEffect(() => {      
       try {
@@ -75,7 +76,7 @@ export default function UpdatePost() {
    const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-         const res = await fetch('/api/post/updatepost', {
+         const res = await fetch(`/api/post/updatepost/${formData._id}/${currentUser._id}`, {
             method: 'PUT',
             headers: {
                'Content-Type': 'application/json',
@@ -89,7 +90,7 @@ export default function UpdatePost() {
          }
          if (res.ok) {
             setPublishError(null);
-            navigate(`/`);
+            navigate(`/post/${data.slug}`);
          }
       } catch (error) {
          setPublishError("Something went wrong");
@@ -113,14 +114,12 @@ export default function UpdatePost() {
                      ...formData, title: e.target.value
                   })}
                   value={formData.title}
-                  key={formData.title}
                />
                <Select
                   onChange={(e) => setFormData({
                      ...formData, category: e.target.value
                   })}
-                  value={formData.category}
-                  key={formData.category}
+                  value={formData.category}                  
                >
                   <option value='uncategorized'>Select a category</option>
                   <option value='beauty'>Beauty</option>
@@ -134,7 +133,6 @@ export default function UpdatePost() {
                   type='file'
                   accept='image/*'
                   onChange={(e) => setFile(e.target.files[0])}
-                  key={file}
                />
                <Button
                   type='button'
@@ -178,7 +176,6 @@ export default function UpdatePost() {
                   ...formData, content: value
                })}
                value={formData.content}
-               key={formData.content}
             />                      
             <Button 
                type='submit' 
