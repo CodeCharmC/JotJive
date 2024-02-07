@@ -13,13 +13,16 @@ import {useSelector} from 'react-redux';
 export default function UpdatePost() {
    const [file, setFile] = useState(null);
    const [imageUploadProgress, setImageUploadProgress] = useState(null);
-   const [imageUploadError, setImageUploadError] = useState(null);
-   const [formData, setFormData] = useState({});
+   const [imageUploadError, setImageUploadError] = useState(null);   
    const [publishError, setPublishError] = useState(null);
    const navigate = useNavigate();
    const { postId } = useParams();
    const {currentUser} = useSelector((state) => state.user);
-   
+   const [formData, setFormData] = useState({
+      title: '',
+      content: '',
+      catagory:  'uncategorized',
+   });
    useEffect(() => {      
       try {
          const fetchPost = async () => {

@@ -26,7 +26,7 @@ export default function CreatePost() {
          }
          setImageUploadError(null);
          const storage = getStorage(app);
-         const fileName = new Date().getTime() + file.name;
+         const fileName = new Date().getTime() +'-'+ file.name;
          const storageRef = ref(storage, fileName);
          const uploadTask = uploadBytesResumable(storageRef, file);
          uploadTask.on(
@@ -81,7 +81,7 @@ export default function CreatePost() {
             onSubmit={handleSubmit}
             className='flex flex-col gap-4'
          >
-            <div className='flex flex-col gap-4 sm:flex-row justify-between'>
+            <div className='flex flex-col gap-4 sm:flex-row justify-between'>            
                <TextInput
                   type='text'
                   placeholder='Title'
