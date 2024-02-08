@@ -1,6 +1,6 @@
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Alert, Button, Textarea } from 'flowbite-react';
 import Comment from './Comment.jsx';
 
@@ -37,6 +37,20 @@ export default function CommentSection({postId}) {
          setCommentError(error.message);
       }
    };
+   useEffect(() => {
+      const getComments = async () => {
+         try {
+            const res = await fetch(`/api/comment/getPostComments/${postId}`);
+            if (res.ok) {
+               const data = await res.json();
+               setComments(data);
+            }
+         } catch (error) {
+            console.log(error.message);
+         }
+      };
+      getComments();
+   }, [postId]);
    return (
       <div className='max-w-2xl mx-auto w-full p-3'>
          {currentUser ? (
@@ -107,7 +121,18 @@ export default function CommentSection({postId}) {
                   <div className='border border-gray-400 py-1 px-2 rounded-sm'>
                      <p>{comments.length}</p>
                   </div>
-               </div>       
+               </div>
+               {comments.map((comment) => (
+                  <Comment
+                     key={comment._id}
+                     comment={comment}
+                     onDelete={(commentId) => {
+                        setComments(
+                           comments.filter((comment) => comment._id !== commentId)
+                        );
+                     }}
+                  />
+               ))}
             </>
          )}
       </div>
