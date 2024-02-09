@@ -1,8 +1,9 @@
 import { useSelector } from 'react-redux';
 import { Link, useNavigate} from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Alert, Button, Textarea } from 'flowbite-react';
+import { Alert, Button, Textarea, Modal, TextInput} from 'flowbite-react';
 import Comment from './Comment.jsx';
+import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 export default function CommentSection({postId}) {
    const { currentUser } = useSelector((state) => state.user);
@@ -10,6 +11,8 @@ export default function CommentSection({postId}) {
    const [commentError, setCommentError] = useState(null);
    const [comments, setComments] = useState([]);
    const navigate = useNavigate();
+   const [commentToDelete, setCommentToDelete] = useState(null);
+   const [showModal, setShowModal] = useState(false);
    console.log(comment, commentError);
    const handleSubmit = async (e) => {
       e.preventDefault();
@@ -33,7 +36,7 @@ export default function CommentSection({postId}) {
             setComment('');
             setCommentError(null);
             setComments([data, ...comments]);
-         }         
+         }
       } catch (error) {
          setCommentError(error.message);
       }
@@ -52,15 +55,15 @@ export default function CommentSection({postId}) {
       };
       getComments();
    }, [postId]);
-   const handleLike = async (commentId ) => {
+   const handleLike = async (commentId) => {
       try {
-         if (!currentUser) { 
+         if (!currentUser) {
             navigate('/sign-in');
             return;
          }
          const res = await fetch(`/api/comment/likeComment/${commentId}`, {
             method: 'PUT',
-         });         
+         });
          if (res.ok) {
             const data = await res.json();
             setComments(
@@ -76,16 +79,16 @@ export default function CommentSection({postId}) {
       } catch (error) {
          console.log(error.message);
       }
-   }
-   const handleHate = async (commentId ) => {
+   };
+   const handleHate = async (commentId) => {
       try {
-         if (!currentUser) { 
+         if (!currentUser) {
             navigate('/sign-in');
             return;
          }
          const res = await fetch(`/api/comment/hateComment/${commentId}`, {
             method: 'PUT',
-         });         
+         });
          if (res.ok) {
             const data = await res.json();
             setComments(
@@ -101,14 +104,32 @@ export default function CommentSection({postId}) {
       } catch (error) {
          console.log(error.message);
       }
-   }
+   };
    const handleEdit = async (comment, editedContent) => {
       setComments(
-        comments.map((c) =>
-          c._id === comment._id ? { ...c, content: editedContent } : c
-        )
+         comments.map((c) =>
+            c._id === comment._id ? { ...c, content: editedContent } : c
+         )
       );
-    };
+   };
+   const handleDelete = async (commentId) => {
+      setShowModal(false);
+      try {
+         if (!currentUser) {
+            navigate('/sign-in');
+            return;
+         }
+         const res = await fetch(`/api/comment/deleteComment/${commentId}`, {
+            method: 'DELETE',
+         });
+         if (res.ok) {
+            const data = await res.json();
+            setComments(comments.filter((comment) => comment._id !== commentId));
+         }
+      } catch (error) {
+         console.log(error.message);
+      }
+   };
    return (
       <div className='max-w-2xl mx-auto w-full p-3'>
          {currentUser ? (
@@ -188,14 +209,40 @@ export default function CommentSection({postId}) {
                      onHate={handleHate}
                      onEdit={handleEdit}
                      onDelete={(commentId) => {
-                        setComments(
-                           comments.filter((comment) => comment._id !== commentId)
-                        );
+                        setShowModal(true);
+                        setCommentToDelete(commentId);
                      }}
                   />
                ))}
             </>
          )}
+         <Modal
+            show={showModal}
+            onClose={() => setShowModal(false)}
+            popup
+            size='md'
+         >
+            <Modal.Header />
+            <Modal.Body>
+               <div className='text-center'>
+                  <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
+                  <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
+                     Are you sure you want to delete this comment?
+                  </h3>
+                  <div className='flex justify-center gap-4'>
+                     <Button
+                        color='failure'
+                        onClick={() => handleDelete(commentToDelete)}
+                     >
+                        Yes, I'm sure
+                     </Button>
+                     <Button color='gray' onClick={() => setShowModal(false)}>
+                        No, cancel
+                     </Button>
+                  </div>
+               </div>
+            </Modal.Body>
+         </Modal>
       </div>
    );
 }
