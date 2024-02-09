@@ -77,6 +77,31 @@ export default function CommentSection({postId}) {
          console.log(error.message);
       }
    }
+   const handleHate = async (commentId ) => {
+      try {
+         if (!currentUser) { 
+            navigate('/sign-in');
+            return;
+         }
+         const res = await fetch(`/api/comment/hateComment/${commentId}`, {
+            method: 'PUT',
+         });         
+         if (res.ok) {
+            const data = await res.json();
+            setComments(
+               comments.map((comment) =>
+                  comment._id === commentId ? {
+                     ...comment,
+                     hates: data.hates,
+                     numberOfhates: data.hates.length
+                  } : comment
+               )
+            );
+         }
+      } catch (error) {
+         console.log(error.message);
+      }
+   }
    return (
       <div className='max-w-2xl mx-auto w-full p-3'>
          {currentUser ? (
@@ -153,6 +178,7 @@ export default function CommentSection({postId}) {
                      key={comment._id}
                      comment={comment}
                      onLike={handleLike}
+                     onHate={handleHate}
                      onDelete={(commentId) => {
                         setComments(
                            comments.filter((comment) => comment._id !== commentId)

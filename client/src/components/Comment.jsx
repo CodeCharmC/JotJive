@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import moment from 'moment';
-import { FaThumbsUp } from 'react-icons/fa';
+import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
-export default function Comment({ comment, onLike }) {
+export default function Comment({ comment, onLike, onHate }) {
    const [user, setUser] = useState({});
    const { currentUser } = useSelector((state) => state.user);   
    useEffect(() => {
@@ -39,23 +39,43 @@ export default function Comment({ comment, onLike }) {
                </span>
             </div>
             <p className='text-gray-500 pb-2'>{comment.content}</p>
-            <div className='flex items-center pt-2 text-xs border-t dark:border-gray-700 max-w-fit gap-2'>
-               <button
-                  type='button'
-                  onClick={() => onLike(comment._id)}
-                  className={`text-gray-400 hover:text-blue-500 
+            <div className='flex items-center gap-2'>
+               <div className='flex items-center pt-2 text-xs border-t dark:border-gray-700 max-w-fit gap-2'>
+                  <button
+                     type='button'
+                     onClick={() => onLike(comment._id)}
+                     className={`text-gray-400 hover:text-blue-500 
                   ${currentUser &&
-                     comment.likes.includes(currentUser._id) &&
-                     '!text-blue-500'}`}
-               >
-                  <FaThumbsUp className='text-sm' />
-               </button>
-               <p className='text-gray-400'>
-                  {comment.numberOfLikes > 0 &&
-                     comment.numberOfLikes +
-                     ' ' +
-                     (comment.numberOfLikes === 1 ? 'like' : 'likes')}
-               </p>
+                        comment.likes.includes(currentUser._id) &&
+                        '!text-blue-500'}`}
+                  >
+                     <FaThumbsUp className='text-sm' />
+                  </button>
+                  <p className='text-gray-400'>
+                     {comment.numberOfLikes > 0 &&
+                        comment.numberOfLikes +
+                        ' ' +
+                        (comment.numberOfLikes === 1 ? 'like' : 'likes')}
+                  </p>
+               </div>
+               <div className='flex items-center pt-2 text-xs border-t dark:border-gray-700 max-w-fit gap-2'>
+                  <button
+                     type='button'
+                     onClick={() => onHate(comment._id)}
+                     className={`text-gray-400 hover:text-blue-500 
+                  ${currentUser &&
+                        comment.hates.includes(currentUser._id) &&
+                        '!text-blue-500'}`}
+                  >
+                     <FaThumbsDown className='text-sm' />
+                  </button>
+                  <p className='text-gray-400'>
+                     {comment.numberOfHates > 0 &&
+                        comment.numberOfHates +
+                        ' ' +
+                        (comment.numberOfHates === 1 ? 'hate' : '')}
+                  </p>
+               </div>
             </div>
          </div>
       </div>

@@ -22,6 +22,14 @@ const commentSchema = new mongoose.Schema(
          type: Number,
          default: 0,
       },
+      hates: {
+         type: Array,
+         default: [],
+      },
+      numberOfhates: {
+         type: Number,
+         default: 0,
+      },
    },
    { timestamps: true }
 );
