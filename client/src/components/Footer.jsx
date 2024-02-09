@@ -64,7 +64,7 @@ export default function FooterPart() {
                </div>
             </div>
             <Footer.Divider />
-            <div>
+            <div className="w-full sm:flex sm:items-center sm:justify-between">
                <Footer.Copyright
                   href="#"
                   by="JotJive"
