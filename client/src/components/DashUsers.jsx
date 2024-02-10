@@ -115,14 +115,13 @@ export default function DashUsers() {
                      </Table.Body>
                   ))}
                </Table>
-               {showmore &&(
-                  <Button
-                     className="my-3"
-                     gradientDuoTone="purpleToBlue"
+               {showmore &&(                  
+                  <button
                      onClick={handleShowMore}
+                     className='w-full text-teal-500 self-center text-sm py-7'
                   >
                      Show more
-                  </Button>
+                  </button>
                )}
             </>
          ):(

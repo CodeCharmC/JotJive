@@ -23,9 +23,9 @@ useEffect(() => {
    if (searchTermFromUrl || sortFromUrl || categoryFromUrl) {
       setSidebarData({
          ...sidebarData,
-         searchTerm: searchTermFromUrl,
-         sort: sortFromUrl,
-         category: categoryFromUrl,
+         searchTerm: searchTermFromUrl || '',
+         sort: sortFromUrl || 'desc',
+         category: categoryFromUrl || 'uncategorized'
       });
    }
    const fetchPosts = async () => {

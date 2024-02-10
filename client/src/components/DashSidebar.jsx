@@ -40,7 +40,7 @@ export default function DashSidebar() {
       } catch (error) {
         console.log(error.message);
       }
-    }
+   }   
    return (
       <Sidebar className='w-full md:w-56'>
          <Sidebar.Items>

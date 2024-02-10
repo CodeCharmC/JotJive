@@ -111,13 +111,12 @@ export default function DashComments() {
                   ))}
                </Table>
                {showMore &&(
-                  <Button
-                     className="my-3"
-                     gradientDuoTone="purpleToBlue"
+                  <button
                      onClick={handleShowMore}
+                     className='w-full text-teal-500 self-center text-sm py-7'
                   >
                      Show more
-                  </Button>
+                  </button>
                )}
             </>
          ) : (

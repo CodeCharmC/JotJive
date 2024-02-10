@@ -7,7 +7,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 export default function DashPosts() {
    const { currentUser } = useSelector((state) => state.user);
    const [userPosts, setUserPosts] = useState([]);
-   const [showmore, setShowMore] = useState(true);
+   const [showMore, setShowMore] = useState(true);
    const [showModal, setShowModal] = useState(false);
    const [postIdToDelete, setPostIdToDelete] = useState("");
    useEffect(() => {
@@ -130,14 +130,13 @@ export default function DashPosts() {
                      </Table.Body>
                   ))}
                </Table>
-               {showmore &&(
-                  <Button
-                     className="my-3"
-                     gradientDuoTone="purpleToBlue"
+               {showMore &&(
+                  <button
                      onClick={handleShowMore}
+                     className='w-full text-teal-500 self-center text-sm py-7'
                   >
                      Show more
-                  </Button>
+                  </button>
                )}
             </>
          ):(
